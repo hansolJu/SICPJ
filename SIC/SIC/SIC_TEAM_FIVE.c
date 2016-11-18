@@ -56,3 +56,54 @@
 */
 
 
+#include <stdio.h>
+#include <stdlib.h> //exit()
+#include <string.h> //strlen()
+#include <ctype.h> //isdigit()
+#include <math.h> //pow()
+
+#define SYMMAX 100
+
+int locctr;  //위치 계수기
+int progleng; //전체 프로그램의 길이
+struct oneline { //소스 프로그램의 한 라인은 고정된 필드로 구성
+	char loc[10]; //기계 주소, 중간코드에서 사용
+	char label[10];
+	char opcode[10];
+	char operand[10];
+};
+
+struct operators {
+	char name[10];
+	char code[9];
+};
+
+struct operators instruction[26] = { //OPTAB
+	{ "ADD", "18" },{ "AND", "40" },{ "COMP", "28" },{ "DIV", "24" },
+	{ "J", "3C" },{ "JEQ", "30" },{ "JGT", "34" },{ "JLT", "38" },
+	{ "JSUB", "48" },{ "LDA", "00" },{ "LDCH", "50" },{ "LDL", "08" },
+	{ "LDX", "04" },{ "MUL", "20" },{ "OR", "44" },{ "RD", "D8" },
+	{ "RSUB", "4C" },{ "STA", "0C" },{ "STCH", "54" },{ "STL", "14" },
+	{ "STSW", "E8" },{ "STX", "10" },{ "SUB", "1C" },{ "TD", "E0" },
+	{ "TIX", "2C" },{ "WD", "DC" }
+};
+
+struct entry {
+	char name[10]; //레이블의 이름
+	int value;  //레이블에 배정된 값
+	int errorflag; //한 기호가 두 장소에서 정의되는 오류를 나타내는 플래그, error: set
+};
+struct entry symtable[SYMMAX]; //심벌 테이블 배열
+
+int lastentry = 0; //symtable에서 새로운 라벨이 들어갈 배열 첨자 위치
+
+void path1();
+void path2();
+struct oneline readline(FILE *, int);
+int lookup(char *);
+void insert(char *, int);
+int srchop(char *); //OPCODE를 위해 OPTAB를 검색, 리턴값: 검색된 OP의 배열의 첨자 + 1, 실패시 0
+int xtoi(char *);
+int srchoperand(char *s);
+char * file1[20];
+char * file2[20];
