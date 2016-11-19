@@ -88,6 +88,64 @@ if(주석이 아니면)
 //2. BYTE, WORD등으로 정의되는 데이타 값을 생성
 //3. 패스 1 동안에 이루어지지 않는 어셈블러 지시자의 처리
 //4. 목적 프로그램과 어셈블러 리스트를 출력
+/*
+SIC어셈블러 알고리즘(PASS2)
+public void pass2(String 파일이름){
+
+/ 위치카운터(LOCCTR)초기화.
+
+try{
+//파일열기
+//첫번째 라인을 읽어들임
+//tokenizer 메소드 통과
+Tokenizer.parse(line);
+
+
+if(분리한 token에서 "START"지시어 찾음){
+.
+.
+.
+//시작주소를 읽어 저장하고 lc를 셋팅
+.
+.
+}
+
+while(END문이 나올때까지 수행){
+
+if(주석이 아니면){
+	if(!Tokenizer.LABLE.equals(".")){
+	.
+	.
+	.
+	//OP code를 찾는다.
+	( 심벌일때와 "STCH", "LLDCH"일때 각각 Processing되도록 구현)
+	.
+	.
+	.
+	}
+}
+//SYMTAB을 이용하여 object 코드명령어을 어셈블한다.
+
+objCode = OPTAB.getCode(Tokenizer.OPCODE)+
+Formatter(Integer.tohexString(opndAddr), 4, 0, 0);
+else if{
+.
+.
+.
+//어셈블리 지시어(RESW,RESB,BYTE,WORD)등으로 정의되는
+DATA값을 생성한다.
+.
+.
+.
+}
+
+//List File output print
+//END recod 출력
+//예외처리( FileNotFoundException, IOException)
+
+
+
+*/
 
 //OPTAB: 연상 명령어를 찾아서 기계어를 번역하는데 사용
 //1. 적어도 명령어 코드와 해당되는 기계 코들를 포함
