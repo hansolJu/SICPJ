@@ -33,14 +33,14 @@ struct operators {
 };*/
 
 typedef struct TABLE {
-	char opcode[OPCODE_MAX];
-	char memory[MEMORY_MAX];
+	char opcode[OPCODE_MAX];      //OPTAB 연산명령
+	char memory[MEMORY_MAX];      //OPTAB 연산코드
 }TABLE;
 
 typedef struct LINE {
-	char label[MAX];
-	char memory[MEMORY_MAX];
-	char location[MAX];
+	char label[MAX];              //원시문 COPY, FIRST....등등 넣어주는 배열
+	char memory[MEMORY_MAX];      //원시문 START, STL....등등 넣어주는 배열
+	char location[MAX];           //원시문 1000, RETADR...등등 넣어주는 배열   
 }LINE;
 
 TABLE table[MAX];
@@ -55,7 +55,7 @@ struct entry symtable[SYMMAX]; //심벌 테이블 배열
 
 int lastentry = 0; //symtable에서 새로운 라벨이 들어갈 배열 첨자 위치
 
-void loadTable() {
+void loadTable() {           //파일에 저장된 OPTAB 열기 
 	FILE* fp;
 	int i = 0;
 
@@ -72,30 +72,30 @@ void loadTable() {
 //void path1();
 int path1() {
 	FILE* fp;
-	char buffer[MAX];
-	char* token;
-	int lineCount = 0;
-	char* context = NULL;
-	fopen_s(&fp, "opcode.s", "r");
+	char buffer[MAX];       //파일 opcode에 저장된 어셈블 소스를 버퍼 배열에 옮김
+	char* token;           
+	int lineCount = 0;      //선언하므로써 어셈블 소스의 총길이를 알 수 있음
+	char* context = NULL;   //strtok_s 사용하기 위해 선언 strtok 사용하면 필요 없음, 버퍼에 남은 문자열
+	fopen_s(&fp, "opcode.s", "r");     //저장된 어셈블 소스 열기
 	while (fgets(buffer, MAX, fp) != NULL) {
 
-		if (buffer[0] != '\t') {
-			token = strtok_s(buffer, "\t\n",&context);
+		if (buffer[0] != '\t') {                        //opcode에 저장된 이섬블 소스 tab으로 구분, label값이 tab이 아니라면
+			token = strtok_s(buffer, "\t\n",&context);  //문자열로 분할하여 토큰에 넣어줌
 			
-			strcpy_s(line[lineCount].label, 10,token);
-			token = strtok_s(NULL, "\t\n",&context);
+			strcpy_s(line[lineCount].label, 10,token);  //토큰값에 들어있는걸 line[lineCount].label에 복사함
+			token = strtok_s(NULL, "\t\n",&context);    //context에 남은 문자열이 없다면 null을 반환하고 있다면 남은 문자열 토큰에 넣어줌
 		}
-		else {
-			strcpy_s(line[lineCount].label,10, "");
+		else {                                         //원시문 label값이 없고 tab이 있다면
+			strcpy_s(line[lineCount].label,10, "");    //label 값이 없으므로 공백 넣어줌 
 
-			token = strtok_s(buffer, "\t\n",&context);
+			token = strtok_s(buffer, "\t\n",&context); //label값이 없으므로 다음에 나올 memory값을 토큰에 넣어줌
 		}
 
-		strcpy_s(line[lineCount].memory,10, token);
+		strcpy_s(line[lineCount].memory,10, token);   //토큰값에 들어있는걸 line[lineCount].memory에 복사함
 
 		token = strtok_s(NULL, "\t\n",&context);
 
-		strcpy_s(line[lineCount].location,10, token);
+		strcpy_s(line[lineCount].location,10, token);  //토큰값에 들어있는걸 line[lineCount].location에 복사함
 
 		printf("%s %s %s\n", line[lineCount].label, line[lineCount].memory, line[lineCount].location);
 
