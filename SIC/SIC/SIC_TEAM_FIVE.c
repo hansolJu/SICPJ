@@ -91,8 +91,6 @@ sic 기계구조(ADT)짜야함
 3개: LABEL OPCODE OPERAND
 * 피연산자가 ,로 구분된 2개인 경우 붙여 씀 ex) addr r1,r2
 */
-
-
 #include <stdio.h>
 #include <stdlib.h> //exit()
 #include <string.h> //strlen()
@@ -100,7 +98,9 @@ sic 기계구조(ADT)짜야함
 #include <math.h> //pow()
 
 #define SYMMAX 100
-
+#define MAX 100
+#define OPCODE_MAX 4
+#define MEMORY_MAX 7
 int locctr;  //위치 계수기
 int progleng; //전체 프로그램의 길이
 struct oneline { //소스 프로그램의 한 라인은 고정된 필드로 구성
@@ -115,19 +115,29 @@ struct operators {
 	char code[9];
 };
 
-struct operators instruction[26] = { //OPTAB
-	{ "LDA", "00" },{ "LDX", "04" },{ "STA", "0C" },{ "STX", "10" },//레지스터로부터 읽고 쓰는 명령
-	{ "ADD", "18" },{ "SUB", "1C" },{ "MUL", "20" },{ "DIV", "24" },//정수연산 명령어들
-	{ "COMP", "28" },//비교 명령어
-	{ "J", "3C" },{ "JEQ", "30" },{ "JGT", "34" },{ "JLT", "38" },//조건부 점프 명령어
-	{ "AND", "40" },
-	
-	{ "JSUB", "48" },{ "LDCH", "50" },{ "LDL", "08" },
-	{ "OR", "44" },{ "RD", "D8" },
-	{ "RSUB", "4C" },{ "STCH", "54" },{ "STL", "14" },
-	{ "STSW", "E8" },{ "TD", "E0" },
-	{ "TIX", "2C" },{ "WD", "DC" }
-};
+/*struct operators instruction[26] = { //OPTAB
+{ "ADD", "18" },{ "AND", "40" },{ "COMP", "28" },{ "DIV", "24" },
+{ "J", "3C" },{ "JEQ", "30" },{ "JGT", "34" },{ "JLT", "38" },
+{ "JSUB", "48" },{ "LDA", "00" },{ "LDCH", "50" },{ "LDL", "08" },
+{ "LDX", "04" },{ "MUL", "20" },{ "OR", "44" },{ "RD", "D8" },
+{ "RSUB", "4C" },{ "STA", "0C" },{ "STCH", "54" },{ "STL", "14" },
+{ "STSW", "E8" },{ "STX", "10" },{ "SUB", "1C" },{ "TD", "E0" },
+{ "TIX", "2C" },{ "WD", "DC" }
+};*/
+
+typedef struct TABLE {
+	char opcode[OPCODE_MAX];
+	char memory[MEMORY_MAX];
+}TABLE;
+
+typedef struct LINE {
+	char label[MAX];
+	char memory[MEMORY_MAX];
+	char location[MAX];
+}LINE;
+
+TABLE table[MAX];
+LINE line[MAX];
 
 struct entry {
 	char name[10]; //레이블의 이름
@@ -138,7 +148,56 @@ struct entry symtable[SYMMAX]; //심벌 테이블 배열
 
 int lastentry = 0; //symtable에서 새로운 라벨이 들어갈 배열 첨자 위치
 
-void path1();
+void loadTable() {
+	FILE* fp;
+	int i = 0;
+
+	fopen_s(&fp, "optable", "r");
+
+	while (!feof(fp)) {
+		fscanf_s(fp, "%s ", table[i].memory, MEMORY_MAX);
+		fscanf_s(fp, "%s", table[i].opcode, OPCODE_MAX);
+		i++;
+	}
+
+	fclose(fp);
+}
+//void path1();
+int path1() {
+	FILE* fp;
+	char buffer[MAX];
+	char* token;
+	int lineCount = 0;
+	char* context = NULL;
+	fopen_s(&fp, "opcode.s", "r");
+	while (fgets(buffer, MAX, fp) != NULL) {
+
+		if (buffer[0] != '\t') {
+			token = strtok_s(buffer, "\t\n", &context);
+
+			strcpy_s(line[lineCount].label, 10, token);
+			token = strtok_s(NULL, "\t\n", &context);
+		}
+		else {
+			strcpy_s(line[lineCount].label, 10, "");
+
+			token = strtok_s(buffer, "\t\n", &context);
+		}
+
+		strcpy_s(line[lineCount].memory, 10, token);
+
+		token = strtok_s(NULL, "\t\n", &context);
+
+		strcpy_s(line[lineCount].location, 10, token);
+
+		printf("%s %s %s\n", line[lineCount].label, line[lineCount].memory, line[lineCount].location);
+
+		lineCount++;
+	}
+	fclose(fp);
+
+	return lineCount;
+}
 void path2();
 struct oneline readline(FILE *, int);
 int lookup(char *);
@@ -148,3 +207,12 @@ int xtoi(char *);
 int srchoperand(char *s);
 char * file1[20];
 char * file2[20];
+
+int main() {
+	int lines;
+
+	loadTable();
+
+	lines = path1();
+
+}
