@@ -198,10 +198,11 @@ DATA값을 생성한다.
 /*****************preprocesses*****************/
 
 #define SYMMAX 100
-#define MAX 100
+#define MAX 100     //source program의 최대길이
 #define OPCODE_MAX 4
 #define MEMORY_MAX 7
 #define WORD_SIZE 3
+#define START 1000      //program start address
 
 
 
@@ -214,6 +215,9 @@ struct oneline { //소스 프로그램의 한 라인은 고정된 필드로 구�
 	char operand[10];
 };
 
+//위의 oneline과 밑에있는 LINE이 겹치는데 어떤걸 써야할까
+//중간코드에선 loc 값이 필요하니 struct LINE에 loc 변수를 넣겠다
+
 struct operators {
 	char name[10];
 	char code[9];
@@ -225,10 +229,12 @@ typedef struct TABLE {
 }TABLE;
 
 typedef struct LINE {
+    char loc[10];           //중간파일에서 쓰이려면 이게 필요해서 추가함
     char label[MAX];              //원시문 COPY, FIRST....등등 넣어주는 배열
     char memory[MEMORY_MAX];      //원시문 START, STL....등등 넣어주는 배열
-    char location[MAX];           //원시문 1000, RETADR...등등 넣어주는 배열   
-}LINE;
+    char location[MAX];           //원시문 1000, RETADR...등등 넣어주는 배열 
+    //이름들을 label opcode operand로 고치고 싶었지만 그냥 냅뒀음 ㅇㅅㅇ 
+}LINE;  //중간 파일의 라인으로 쓰입니다
 
 typedef struct LABEL {
     char label[MAX];              //원시문 lable 값을 옮겨주기 위해 선언
@@ -244,9 +250,8 @@ struct entry symtable[SYMMAX]; //심벌 테이블 배열
 
 
 TABLE table[MAX];
-LINE line[MAX];
+LINE line[MAX];//source program에서 읽어들인 line들을 넣을 배열을 미리 선언해서 쓴다
 LABEL label[MAX];
-
 
 
 
@@ -277,7 +282,11 @@ char * file2[20];
 void loadTable();
 int cal(lines);
 int sizeCheck(int i);
-struct oneline readline(FILE *, int);//read one line from original source
+
+//필요없다
+//path1에 있다
+//나중에 분리하등가ㅏ
+//struct oneline readline(FILE *, int);
 int lookup(char *);                 // ?
 void insert(char *, int);
 
@@ -293,7 +302,7 @@ int main();
 
 
 
-/*****************main****************/
+/*****************main function****************/
 
 int main() {
     int lines;
@@ -325,7 +334,7 @@ void loadTable() {           //파일에 저장된 OPTAB 열기
     fclose(fp);
 }
 
-int cal(lines) {            //원시문 location값
+int cal(lines) {            //원시문 location값 //요거 뭐하는 함수인가여
     int i;
     int startLocation = 0;
     int radix = 1;
@@ -380,8 +389,13 @@ int sizeCheck(int i) {
     }
 }
 
-struct oneline readline(FILE *, int) {
-}
+
+
+//필요없다
+//path1에 있다
+//나중에 분리하등가ㅏ
+
+//struct oneline readline(FILE *, int) {}
 
 int lookup(char *) {
 }
@@ -414,13 +428,16 @@ int srchoperand(char *s) {
 
 int path1() {
     FILE* fp;
-    char buffer[MAX];       //파일 opcode에 저장된 어셈블 소스를 버퍼 배열에 옮김
+    char buffer[MAX];       //strtok에 쓰는 버퍼
     char* token;
     int lineCount = 0;      //선언하므로써 어셈블 소스의 총길이를 알 수 있음
     char* context = NULL;   //strtok_s 사용하기 위해 선언 strtok 사용하면 필요 없음, 버퍼에 남은 문자열
     fopen_s(&fp, "opcode.s", "r");     //저장된 어셈블 소스 열기
+    
+    //source file에서 읽어옴
     while (fgets(buffer, MAX, fp) != NULL) {
 
+        //
         if (buffer[0] != '\t') {                        //opcode에 저장된 이섬블 소스 tab으로 구분, label값이 tab이 아니라면
             token = strtok_s(buffer, "\t\n", &context);  //문자열로 분할하여 토큰에 넣어줌
 
@@ -434,7 +451,6 @@ int path1() {
         }
 
         strcpy_s(line[lineCount].memory, 10, token);   //토큰값에 들어있는걸 line[lineCount].memory에 복사함
-
         token = strtok_s(NULL, "\t\n", &context);
 
         strcpy_s(line[lineCount].location, 10, token);  //토큰값에 들어있는걸 line[lineCount].location에 복사함
@@ -444,6 +460,72 @@ int path1() {
         lineCount++;
     }
     printf("\n");
+
+    //밑에 코드설명:
+    // 프로그램의 모든 문에 주ㅜ소를 배정한다
+    //start문 주소는 다음 문 주소와 같다. 우리는 1000에서 ㅅ시작한다
+    //instruction은 3-byte = 24-bits 이므로 주소는 3씩 증가한다
+    //byte나 word는 n개를 봐야한다. RESB n개면 주소는 n이 밀리고
+    //RESW n이면 주소는 3n이 밀린다
+    //서브루틴이 있어도 이어서 주소배정하면됨
+    //쉽다?
+
+    //특수처리 opcode: start, byte, 
+    
+    //음..일단 첫줄부터 무조건 START가 나온다고 가정하자
+    //첫줄에 다른건 안나온다고 가정하는거다
+
+    int i;
+    int loc = START;
+    i = 0;
+    //stricmp(): 대소문자를 무시하고 스트링을 비교한다
+    while (1) {
+        if (stricmp(line[i].memory, "START") == 0) {
+            line[i].loc = loc;
+        } else if (stricmp(line[i].memory, "END") == 0) {
+            //program end
+            break;
+        } else if (stricmp(line[i].memory, "BYTE") == 0) {
+            //byte인데 3짜리 스트링을 써서 3개가 밀리는 예제가
+            //책 p.58에 있음 fig 2.2
+            //뭐지 이거 모르겠넹
+            //
+            //아 이거 스트링이면 
+            //다시말해 label이 C''이면 
+            //스트링 길이 재서 그만큼 주소..해야함
+
+        } else if (stricmp(line[i].memory, "WORD") == 0) {
+            //얜 그냥 3바이트다. 개수 안세고 그냥.
+            line[i].loc = loc;
+            loc = loc + 3;
+        } else if (stricmp(line[i].memory, "RESB") == 0) {
+            line[i].loc = loc;
+            int temp0;    //just temporary variable
+            temp0 = atoi(line[i].location);
+            loc = loc + temp0;
+        } else if (stricmp(line[i].memory, "RESW") == 0) {
+            line[i].loc = loc;
+            int temp0;    //just temporary variable
+            temp0 = atoi(line[i].location);
+            loc = loc + temp0;
+        } else {    //일반적인 instruction에 대해
+            line[i].loc = loc;
+            loc = loc + 3;
+        }
+        i = i + 1;
+    }
+
+
+
+    
+
+
+
+
+
+
+
+
     fclose(fp);
 
     return lineCount;
