@@ -118,52 +118,50 @@ int cal(lines) {            //원시문 location값
 	int startLocation = 0;
 	int radix = 1;
 	int labelCount = 0;
-
-	// 16진수 주소계산을 편하게 하기 위해서 10진수로 변환.
 	int hex = atoi(line[0].location);
 	int decimal = 0;
 
-	while (hex != 0) {
+	while (hex != 0) {                   // 16진수 주소계산을 편하게 하기 위해서 10진수로 변환.
 		decimal += (hex % 10) * radix;
-		
 		hex /= 10;
 		radix *= 16;
 	}
 	
 	for (int i = 1; i < lines; i++) {
-			strcpy_s(label[labelCount].label,10, line[i].label);
-			label[labelCount].location = decimal;
+			strcpy_s(label[labelCount].label,10, line[i].label);  //line[i].label에 있는 값을 label[labelCount].label 옮김
+			label[labelCount].location = decimal;                 //원시문 location 값에 위에서 변환한 10진수 삽입(처음 시작주소)
 			printf("%06x %s\n", label[labelCount].location, label[labelCount].label);
 			labelCount++;
 		
-		decimal += sizeCheck(i);
+		decimal += sizeCheck(i);                                  //location 값 증가시키기 위해 sizeCheck함수 호출
 	}
 
 	return decimal;
 }
 int sizeCheck(int i) {
-	if (strcmp(line[i].memory, "RESW") == 0) {
+	if (strcmp(line[i].memory, "RESW") == 0) {                   //원시문 메모리값이 RESW이면 RESW의 값만큼 WORD_SIZE 곱해줌
 		return atoi(line[i].location) * WORD_SIZE;
 	}
-	else if (strcmp(line[i].memory, "BYTE") == 0) {
+	else if (strcmp(line[i].memory, "BYTE") == 0) {              //원시문 메모리값이 BYTE이면
 		int j;
 		int flag = 0;
 		int count = 0;
 
-		for (j = 0; j < strlen(line[i].location); j++) {
-			if (flag) count++;
-
-			if (!flag && line[i].location[j] == '\'') flag = 1;
-			else if (line[i].location[j] == '\'') break;
+		for (j = 0; j < strlen(line[i].location); j++) {          //원시문 location길이만큼 포문을 돔
+			if (flag)                                             //로케이션 값이 문자면 count 증가
+				count++;
+			if (!flag && line[i].location[j] == '\'')             //로케이션 값에 '가 나오면 flag 증가
+				flag = 1;
+			//else if (line[i].location[j] == '\'') 
+				//break;
 		}
-
-		return count * 1;
+		return count;
 	}
-	else if (strcmp(line[i].memory, "RESB") == 0) {
-		return atoi(line[i].location) * 1;
+	else if (strcmp(line[i].memory, "RESB") == 0) {              //원시문 메모리값이 RESB이면 RESB값만큼 리턴
+		return atoi(line[i].location) ;
 	}
 	else {
-		return WORD_SIZE;
+		return WORD_SIZE;                                        //위에 경우가 전부 아니면 WORD_SIZE만 증가
 	}
 }
 void path2();
