@@ -185,3 +185,4 @@ int main() {
 	cal(lines);
 	
 }
+//ㅎㅎ 난똥이야!
