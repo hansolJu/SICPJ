@@ -1,6 +1,8 @@
-#include < stdio.h>
+#include <stdio.h>
+#include <stdlib.h>
 #include <string.h>
 #include "pass1.h"
+#define IMR_SIZE 100
 #define MAX_CHAR_SIZE 10
 #define INSTRUCTION_SIZE 3
 
@@ -16,7 +18,7 @@ void pass_1(ListHeader *plist, FILE *source) {
 	unsigned char index = 0;
 	int len = 0;
 	char *startP, *endP;
-	char temp[MAX_CHAR_SIZE];
+	char Buffer[MAX_CHAR_SIZE];
 
 	/* Read first line */
 	linedata = readline(sourceFile);
@@ -46,8 +48,8 @@ void pass_1(ListHeader *plist, FILE *source) {
 			}
 			/* SYMTAB 추가 */
 			else {
-				sprintf(temp, "%X", LOCCTR);
-				insert_node_last(plist, linedata->label, temp, index++);
+				sprintf(Buffer, "%X", LOCCTR);
+				insert_node_last(plist, linedata->label, Buffer, index++);
 			}
 
 			/* LOCCTR 증가 */
@@ -93,6 +95,7 @@ void pass_1(ListHeader *plist, FILE *source) {
 }
 
 void pass_another(){
+	int LOCCTR[IMR_SIZE];
 	printf("Pass 1 Processing...\n");
 	while (fgets(Buffer, 256, fptr) != NULL)	// 소스코드 파일에서 코드 읽기
 	{
@@ -187,44 +190,8 @@ void pass_another(){
 							LOCCTR[LocctrCounter] = loc + ComputeLen(operand);
 						}
 					}
-					else if (!strcmp(opcode, "BASE")
-						|| !strcmp(opcode, "NOBASE")) {
-						// 별달리 처리가 필요한 Assembler Directive가 아닐 경우 Loc을 대입
-						LOCCTR[LocctrCounter] = loc;
-					}
-					else if (!strcmp(opcode, "EXTDEF")
-						|| !strcmp(opcode, "EXTREF")) {
-						// 외부 참조, 정의 레이블일 경우 , 단위로 테이블에 추가
-						i = 0; tempLabelIdx = 0;
-						while (1) {
-							if (operand[i] == ',' || operand[i] == '\0') {
-								// , 혹은 \0을 만날 경우 기록
-								tempLabel[tempLabelIdx] = '\0';
-								// 각기 다른 테이블에 기록
-								if (!strcmp(opcode, "EXTDEF")) {
-									RecordEXTDEF(tempLabel);
-								}
-								else if (!strcmp(opcode, "EXTREF")) {
-									RecordEXTREF(tempLabel);
-								}
-								tempLabelIdx = 0;
-								if (operand[i] == '\0') break;	// \0을 만났을 경우 break;
-							}
-							else {
-								tempLabel[tempLabelIdx++] = operand[i];
-							}
-							i++;
-						}
-						LOCCTR[LocctrCounter] = loc;
-					}
-					else if (!strcmp(opcode, "CSECT")) {
-						// 기존에 작성된 심볼테이블을 기반으로 외부 정의 레이블의 위치들 기록
-						if (RecordEXTDEFLoc()) {
-							printf("ERROR: Isn't exist External Define Label\n");	// EXTDEF 중에 심볼테이블에서 찾을 수 없는 레이블이 있을 경우 예외처리
-							fclose(fptr);
-							exit(1);
-						}
-
+										
+				
 						// 각각 END 어셈블러 지시자 추가
 						IMRArray[CSectCounter][ArrayIndex[CSectCounter]]->LabelField[0] = '\0';
 						IMRArray[CSectCounter][ArrayIndex[CSectCounter]]->Loc = LOCCTR[LocctrCounter - 1];
