@@ -1,26 +1,5 @@
 ﻿#include "function.h"
 
-#define MAX 100
-
-FILE *inFile;	//opcode.s
-FILE *opcFile;	//opcode
-
-typedef struct {
-	char lable[7];
-	char inst[7];
-	char symbol[7];
-	int length;
-}INPUT;
-
-typedef struct {
-	char inst[7];
-	char code[7];
-	int length;
-}OPCODE;
-
-INPUT intab[MAX];
-OPCODE opctab[MAX];
-
 //파일 읽는 함수
 void fileRead() {
 	
@@ -39,7 +18,7 @@ void SkipSpace() {
 	while (Buffer[Index] == ' ' || Buffer[Index] == '\t')
 		Index++; // 버퍼 인덱스
 }
-//gggggggg
+
 char strtok() {
 	inFile = fopen("./opcode.s", "r");
 	opcFile = fopen("./opcode", "r");
