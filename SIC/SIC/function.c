@@ -1,20 +1,21 @@
-#include "function.h"
+ï»¿#include "function.h"
 
-//ÆÄÀÏ ÀĞ´Â ÇÔ¼ö
+//íŒŒì¼ ì½ëŠ” í•¨ìˆ˜
 void fileRead() {
 	
 	printf("\nEnter the file name you want to assembly (ex >.sic.txt):");
 	scanf("%s", filename);
 	fptr = fopen(filename, "r");
-	if (fptr == NULL)	// ¼Ò½ºÄÚµå ÆÄÀÏ ÀĞ±â ½ÇÆĞÇßÀ» °æ¿ì ¿¹¿ÜÃ³¸®
+	if (fptr == NULL)	// ì†ŒìŠ¤ì½”ë“œ íŒŒì¼ ì½ê¸° ì‹¤íŒ¨í–ˆì„ ê²½ìš° ì˜ˆì™¸ì²˜ë¦¬
 	{
 		printf("ERROR: Unable to open the %s file.\n", filename);
 		exit(1);
 	}
 }
 
-// °ø¹é ½ºÅµÇÏ±â (Index¸¦ µÚ·Î ¿Å±è)
+// ê³µë°± ìŠ¤í‚µí•˜ê¸° (Indexë¥¼ ë’¤ë¡œ ì˜®ê¹€)
 void SkipSpace() {
 	while (Buffer[Index] == ' ' || Buffer[Index] == '\t')
-		Index++; // ¹öÆÛ ÀÎµ¦½º
+		Index++; // ë²„í¼ ì¸ë±ìŠ¤
 }
+//gggggggg
