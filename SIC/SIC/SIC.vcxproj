@@ -142,7 +142,13 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="function.c" />
+    <ClCompile Include="pass1.c" />
     <ClCompile Include="SIC_TEAM_FIVE.c" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="pass1.h" />
+    <ClInclude Include="function.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
