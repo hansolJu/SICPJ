@@ -1,27 +1,27 @@
-#ifndef __FUNCTION_H__
+ï»¿#ifndef __FUNCTION_H__
 #define __FUNCTION_H__
-#define BUFFER_SIZE 256	//¹öÆÛÅ©±â
+#define BUFFER_SIZE 256	//ë²„í¼í¬ê¸°
 
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
 
 
-//ÆÄÀÏ º¯¼ö;
+//íŒŒì¼ ë³€ìˆ˜;
 FILE * fptr;
 char filename[20];
-//°ø¹é½ºÅµº¯¼ö;
+//ê³µë°±ìŠ¤í‚µë³€ìˆ˜;
 char Buffer[BUFFER_SIZE];
 int Index;
 
-//ÆÄÀÏ ÀĞ´Â ÇÔ¼ö.
+//íŒŒì¼ ì½ëŠ” í•¨ìˆ˜.
 void fileRead();
 
 
 #define MAX_CHAR_SIZE 10
 #define INSTRUCTION_SIZE 3
 
-//¸®½ºÆ® ÀÚ·á±¸Á¶
+//ë¦¬ìŠ¤íŠ¸ ìë£Œêµ¬ì¡°
 typedef struct {
 	char key[MAX_CHAR_SIZE];
 	char value[MAX_CHAR_SIZE];
@@ -40,7 +40,7 @@ typedef struct _ListHeader {
 }ListHeader;
 //
 
-// °ø¹é ½ºÅµÇÏ±â (Index¸¦ µÚ·Î ¿Å±è)
+// ê³µë°± ìŠ¤í‚µí•˜ê¸° (Indexë¥¼ ë’¤ë¡œ ì˜®ê¹€)
 void SkipSpace();
 
 #endif

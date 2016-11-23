@@ -1,4 +1,4 @@
-#ifndef __PASS1_H__
+ï»¿#ifndef __PASS1_H__
 #define __PASS1_H__
 
 #include < stdio.h>
@@ -16,13 +16,13 @@ typedef struct _Data{
 	unsigned char is_X_Index;
 }Data;
 
-typedef struct IntermediateRecord {	// Áß°£ÆÄÀÏ ±¸Á¶
-	unsigned short int LineIndex;	// ¼Ò½ºÄÚµåÀÇ ÇàÀ» ÀúÀåÇÏ´Â º¯¼ö
-	unsigned short int Loc;	//  ÇØ´ç ¸í·É¾îÀÇ ¸Ş¸ğ¸®»ó À§Ä¡
-	unsigned long long int ObjectCode;	//  Pass 2¸¦ °ÅÃÄ AssembleµÈ ¸ñÀûÄÚµå
-	char LabelField[LABEL_LENGTH];	// ¼Ò½ºÄÚµå»ó Ç¥±âµÇ¾îÀÖ´Â ·¹ÀÌºí
-	char OperatorField[LABEL_LENGTH];	// ¼Ò½ºÄÚµå»ó Ç¥±âµÇ¾îÀÖ´Â Mnemonic
-	char OperandField[LABEL_LENGTH];	// ¼Ò½ºÄÚµå»ó Ç¥±âµÇ¾îÀÖ´Â ÇÇ¿¬»êÀÚ
+typedef struct IntermediateRecord {	// ì¤‘ê°„íŒŒì¼ êµ¬ì¡°
+	unsigned short int LineIndex;	// ì†ŒìŠ¤ì½”ë“œì˜ í–‰ì„ ì €ì¥í•˜ëŠ” ë³€ìˆ˜
+	unsigned short int Loc;	//  í•´ë‹¹ ëª…ë ¹ì–´ì˜ ë©”ëª¨ë¦¬ìƒ ìœ„ì¹˜
+	unsigned long long int ObjectCode;	//  Pass 2ë¥¼ ê±°ì³ Assembleëœ ëª©ì ì½”ë“œ
+	char LabelField[LABEL_LENGTH];	// ì†ŒìŠ¤ì½”ë“œìƒ í‘œê¸°ë˜ì–´ìˆëŠ” ë ˆì´ë¸”
+	char OperatorField[LABEL_LENGTH];	// ì†ŒìŠ¤ì½”ë“œìƒ í‘œê¸°ë˜ì–´ìˆëŠ” Mnemonic
+	char OperandField[LABEL_LENGTH];	// ì†ŒìŠ¤ì½”ë“œìƒ í‘œê¸°ë˜ì–´ìˆëŠ” í”¼ì—°ì‚°ì
 }IntermediateRec;
 
 Data *readline(FILE *source) {

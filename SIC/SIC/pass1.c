@@ -1,4 +1,4 @@
-#include <stdio.h>
+ï»¿#include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
 #include "pass1.h"
@@ -32,27 +32,27 @@ void pass_1(ListHeader *plist, FILE *source) {
 	linedata = linedata = readline(sourceFile);
 	while (!strstr(linedata->opcode, "END") && !feof(sourceFile)) {
 
-		/* ÁÖ¼® Ã³¸® */
+		/* ì£¼ì„ ì²˜ë¦¬ */
 		if (!strstr(linedata->label, ".")) {
-			/* ·¹ÀÌºíÀÌ ¾ø´Â °æ¿ì
+			/* ë ˆì´ë¸”ì´ ì—†ëŠ” ê²½ìš°
 			if (strstr(linedata->label, "-")) {
 			LOCCTR += INSTRUCTION_SIZE;
 			continue;
 			}
 			*/
 
-			/* symbol Áßº¹ °Ë»ç */
+			/* symbol ì¤‘ë³µ ê²€ì‚¬ */
 			if (!strstr(linedata->label, "-") && searchNode(symtab, linedata->label)) {
 				setError("Duplicated Symbol");
 				printf("\nerror code : %s\n", linedata->label);
 			}
-			/* SYMTAB Ãß°¡ */
+			/* SYMTAB ì¶”ê°€ */
 			else {
 				sprintf(Buffer, "%X", LOCCTR);
 				insert_node_last(plist, linedata->label, Buffer, index++);
 			}
 
-			/* LOCCTR Áõ°¡ */
+			/* LOCCTR ì¦ê°€ */
 			if (getValue(linedata->opcode))
 				LOCCTR += INSTRUCTION_SIZE;
 			else if (strstr(linedata->opcode, "RESW"))
@@ -89,7 +89,7 @@ void pass_1(ListHeader *plist, FILE *source) {
 		/* Read line */
 		linedata = linedata = readline(sourceFile);
 	}
-	/* ÇÁ·Î±×·¥ ±æÀÌ */
+	/* í”„ë¡œê·¸ëž¨ ê¸¸ì´ */
 	sprintf(plist->length, "%X", LOCCTR - startingAddr);
 	fclose(sourceFile);
 }
@@ -97,93 +97,93 @@ void pass_1(ListHeader *plist, FILE *source) {
 void pass_another(){
 	int LOCCTR[IMR_SIZE];
 	printf("Pass 1 Processing...\n");
-	while (fgets(Buffer, 256, fptr) != NULL)	// ¼Ò½ºÄÚµå ÆÄÀÏ¿¡¼­ ÄÚµå ÀÐ±â
+	while (fgets(Buffer, 256, fptr) != NULL)	// ì†ŒìŠ¤ì½”ë“œ íŒŒì¼ì—ì„œ ì½”ë“œ ì½ê¸°
 	{
 		is_empty_line = strlen(Buffer);
 
 		Index = 0;
 		j = 0;
 		strcpy(label, ReadLabel());
-		if (Label[0] == '.')	// ÇØ´ç ¼Ò½ºÄÚµå°¡ ÁÖ¼®ÀÎÁö ¾Æ´ÑÁö È®ÀÎ
+		if (Label[0] == '.')	// í•´ë‹¹ ì†ŒìŠ¤ì½”ë“œê°€ ì£¼ì„ì¸ì§€ ì•„ë‹Œì§€ í™•ì¸
 			is_comment = 1;
 		else
 			is_comment = 0;
 
 		if (is_empty_line>1 && is_comment != 1)
 		{
-			// ÀÎµ¦½º º¯¼öµé ÃÊ±âÈ­
+			// ì¸ë±ìŠ¤ ë³€ìˆ˜ë“¤ ì´ˆê¸°í™”
 			Index = 0;
 			j = 0;
 
-			IMRArray[CSectCounter][ArrayIndex[CSectCounter]] = (IntermediateRec*)malloc(sizeof(IntermediateRec));/* [A] */	// Áß°£ÆÄÀÏ µ¿ÀûÇÒ´ç
-			IMRArray[CSectCounter][ArrayIndex[CSectCounter]]->LineIndex = ArrayIndex;	// ¼Ò½ºÄÚµå »óÀÇ Çà »ðÀÔ
-			strcpy(label, ReadLabel());	// ·¹ÀÌºíÀ» ÀÐ¾î Label¿¡ ÀúÀå
-			strcpy(IMRArray[CSectCounter][ArrayIndex[CSectCounter]]->LabelField, label);	// ·¹ÀÌºíÀ» Áß°£ÆÄÀÏ¿¡ ÀúÀå
-			SkipSpace();	// °ø¹é Á¦°Å
+			IMRArray[CSectCounter][ArrayIndex[CSectCounter]] = (IntermediateRec*)malloc(sizeof(IntermediateRec));/* [A] */	// ì¤‘ê°„íŒŒì¼ ë™ì í• ë‹¹
+			IMRArray[CSectCounter][ArrayIndex[CSectCounter]]->LineIndex = ArrayIndex;	// ì†ŒìŠ¤ì½”ë“œ ìƒì˜ í–‰ ì‚½ìž…
+			strcpy(label, ReadLabel());	// ë ˆì´ë¸”ì„ ì½ì–´ Labelì— ì €ìž¥
+			strcpy(IMRArray[CSectCounter][ArrayIndex[CSectCounter]]->LabelField, label);	// ë ˆì´ë¸”ì„ ì¤‘ê°„íŒŒì¼ì— ì €ìž¥
+			SkipSpace();	// ê³µë°± ì œê±°
 
-			if (line == start_line)	// ÇÁ·Î±×·¥ÀÇ ½ÃÀÛ ÁöÁ¡ÀÌ Ã¹ÁÙÀÌ ¾Æ´Ò °æ¿ì (Ã¹¹øÂ° ÁÙÀÌ ÁÖ¼®ÀÏ °æ¿ì) ¿¹¿ÜÃ³¸®
+			if (line == start_line)	// í”„ë¡œê·¸ëž¨ì˜ ì‹œìž‘ ì§€ì ì´ ì²«ì¤„ì´ ì•„ë‹ ê²½ìš° (ì²«ë²ˆì§¸ ì¤„ì´ ì£¼ì„ì¼ ê²½ìš°) ì˜ˆì™¸ì²˜ë¦¬
 			{
-				strcpy(opcode, ReadOprator());	// Mnemonic ÀÐ±â
-				strcpy(IMRArray[CSectCounter][ArrayIndex[CSectCounter]]->OperatorField, opcode); /* [A] */	// ÀÐÀº MnemonicÀ» Áß°£ÆÄÀÏ¿¡ ÀúÀå
-				if (!strcmp(opcode, "START")) {	// ½ÃÀÛÁÖ¼Ò ÃÊ±âÈ­
+				strcpy(opcode, ReadOprator());	// Mnemonic ì½ê¸°
+				strcpy(IMRArray[CSectCounter][ArrayIndex[CSectCounter]]->OperatorField, opcode); /* [A] */	// ì½ì€ Mnemonicì„ ì¤‘ê°„íŒŒì¼ì— ì €ìž¥
+				if (!strcmp(opcode, "START")) {	// ì‹œìž‘ì£¼ì†Œ ì´ˆê¸°í™”
 					SkipSpace();
 					strcpy(operand, ReadOperand());
 					strcpy(IMRArray[CSectCounter][ArrayIndex[CSectCounter]]->OperandField, operand);/* [A] */
 					LOCCTR[LocctrCounter] = StrToHex(operand);
 					start_address[CSectCounter] = LOCCTR[LocctrCounter];
 				}
-				else {	// ½ÃÀÛ ÁÖ¼Ò°¡ ¸í½ÃµÇ¾îÀÖÁö ¾ÊÀ» °æ¿ì 0À¸·Î ÃÊ±âÈ­
+				else {	// ì‹œìž‘ ì£¼ì†Œê°€ ëª…ì‹œë˜ì–´ìžˆì§€ ì•Šì„ ê²½ìš° 0ìœ¼ë¡œ ì´ˆê¸°í™”
 					LOCCTR[LocctrCounter] = 0;
 					start_address[CSectCounter] = LOCCTR[LocctrCounter];
 				}
 			}
 			else {
-				strcpy(opcode, ReadOprator());	// OP Code ÀÐ±â
-				strcpy(IMRArray[CSectCounter][ArrayIndex[CSectCounter]]->OperatorField, opcode);	// Áß°£ÆÄÀÏ¿¡ OP code º¹»ç
-				SkipSpace();	// OP code¿Í ÇÇ¿¬»êÀÚ »çÀÌÀÇ °ø¹é Á¦°Å
-				strcpy(operand, ReadOperand());	// ÇÇ¿¬»êÀÚ ºÎºÐ ÀÐ±â
-				strcpy(IMRArray[CSectCounter][ArrayIndex[CSectCounter]]->OperandField, operand);	// Áß°£ÆÄÀÏ¿¡ ÇÇ¿¬»êÀÚ º¹»ç
+				strcpy(opcode, ReadOprator());	// OP Code ì½ê¸°
+				strcpy(IMRArray[CSectCounter][ArrayIndex[CSectCounter]]->OperatorField, opcode);	// ì¤‘ê°„íŒŒì¼ì— OP code ë³µì‚¬
+				SkipSpace();	// OP codeì™€ í”¼ì—°ì‚°ìž ì‚¬ì´ì˜ ê³µë°± ì œê±°
+				strcpy(operand, ReadOperand());	// í”¼ì—°ì‚°ìž ë¶€ë¶„ ì½ê¸°
+				strcpy(IMRArray[CSectCounter][ArrayIndex[CSectCounter]]->OperandField, operand);	// ì¤‘ê°„íŒŒì¼ì— í”¼ì—°ì‚°ìž ë³µì‚¬
 
-				if (strcmp(opcode, "END"))	// OP code°¡ END ¾î¼Àºí·¯ Áö½ÃÀÚ°¡ ¾Æ´Ò °æ¿ì
+				if (strcmp(opcode, "END"))	// OP codeê°€ END ì–´ì…ˆë¸”ëŸ¬ ì§€ì‹œìžê°€ ì•„ë‹ ê²½ìš°
 				{
-					if (label[0] != '\0')	// ·¹ÀÌºíÀÌ ÀÖÀ» °æ¿ì
+					if (label[0] != '\0')	// ë ˆì´ë¸”ì´ ìžˆì„ ê²½ìš°
 					{
-						if (SearchSymtab(label, CSectCounter))	// °°Àº ÀÌ¸§ÀÇ ·¹ÀÌºíÀÌ ÀÖ´ÂÁö Ã£À½
+						if (SearchSymtab(label, CSectCounter))	// ê°™ì€ ì´ë¦„ì˜ ë ˆì´ë¸”ì´ ìžˆëŠ”ì§€ ì°¾ìŒ
 						{
-							// ¸¸¾à °°Àº ÀÌ¸§ÀÇ ·¹ÀÌºíÀÌ ÀÖÀ» °æ¿ì AlertÇÏ°í ÇÁ·Î±×·¥ Á¾·á
+							// ë§Œì•½ ê°™ì€ ì´ë¦„ì˜ ë ˆì´ë¸”ì´ ìžˆì„ ê²½ìš° Alertí•˜ê³  í”„ë¡œê·¸ëž¨ ì¢…ë£Œ
 							fclose(fptr);
 							printf("ERROR: Duplicate Symbol\n");
 							FoundOnSymtab_flag = 0;
 							exit(1);
 						}
-						if (strcmp(opcode, "CSECT")) {	// CSECT°¡ ¾Æ´Ò °æ¿ì¿¡¸¸ ½Éº¼Å×ÀÌºí¿¡ Ãß°¡
-							RecordSymtab(label);	// °°ÀºÀÌ¸§ÀÌ ¾øÀ¸¹Ç·Î ½Éº¼Å×ÀÌºí¿¡ Ãß°¡
+						if (strcmp(opcode, "CSECT")) {	// CSECTê°€ ì•„ë‹ ê²½ìš°ì—ë§Œ ì‹¬ë³¼í…Œì´ë¸”ì— ì¶”ê°€
+							RecordSymtab(label);	// ê°™ì€ì´ë¦„ì´ ì—†ìœ¼ë¯€ë¡œ ì‹¬ë³¼í…Œì´ë¸”ì— ì¶”ê°€
 						}
 					}
 
-					if (SearchOptab(opcode)) {	// OP Code°¡ OPTAB¿¡ ÀÖÀ» °æ¿ì ¸í·É¾î Çü½Ä¸¸Å­ ¸Þ¸ð¸® È®º¸
+					if (SearchOptab(opcode)) {	// OP Codeê°€ OPTABì— ìžˆì„ ê²½ìš° ëª…ë ¹ì–´ í˜•ì‹ë§Œí¼ ë©”ëª¨ë¦¬ í™•ë³´
 						LOCCTR[LocctrCounter] = loc + (int)(OPTAB[Counter].Format - '0');
 						if (ReadFlag(opcode)) {
-							// 4Çü½Ä ¸í·É¾îÀÏ °æ¿ì
-							LOCCTR[LocctrCounter] += 1;	// ±âÁ¸¿¡ 1¹ÙÀÌÆ® ´õ Ãß°¡
+							// 4í˜•ì‹ ëª…ë ¹ì–´ì¼ ê²½ìš°
+							LOCCTR[LocctrCounter] += 1;	// ê¸°ì¡´ì— 1ë°”ì´íŠ¸ ë” ì¶”ê°€
 						}
 					}
-					else if (!strcmp(opcode, "WORD")) {	// 3¹ÙÀÌÆ®(1 WORD) È®º¸
+					else if (!strcmp(opcode, "WORD")) {	// 3ë°”ì´íŠ¸(1 WORD) í™•ë³´
 						if (isFloatNum(operand)) {
-							// ºÎµ¿¼Ò¼öÁ¡Àº 6¹ÙÀÌÆ® »ç¿ëÇÏ¹Ç·Î
+							// ë¶€ë™ì†Œìˆ˜ì ì€ 6ë°”ì´íŠ¸ ì‚¬ìš©í•˜ë¯€ë¡œ
 							LOCCTR[LocctrCounter] = loc + 6;
 						}
 						else {
 							LOCCTR[LocctrCounter] = loc + 3;
 						}
 					}
-					else if (!strcmp(opcode, "RESW"))	// ÇÇ¿¬»êÀÚ °¹¼öÀÇ WORD ¸¸Å­ ¸Þ¸ð¸® È®º¸
+					else if (!strcmp(opcode, "RESW"))	// í”¼ì—°ì‚°ìž ê°¯ìˆ˜ì˜ WORD ë§Œí¼ ë©”ëª¨ë¦¬ í™•ë³´
 						LOCCTR[LocctrCounter] = loc + 3 * StrToDec(operand);
-					else if (!strcmp(opcode, "RESB"))	// ÇÇ¿¬»êÀÚ °¹¼öÀÇ ¹ÙÀÌÆ®¸¸Å­ ¸Þ¸ð¸® È®º¸
+					else if (!strcmp(opcode, "RESB"))	// í”¼ì—°ì‚°ìž ê°¯ìˆ˜ì˜ ë°”ì´íŠ¸ë§Œí¼ ë©”ëª¨ë¦¬ í™•ë³´
 						LOCCTR[LocctrCounter] = loc + StrToDec(operand);
-					else if (!strcmp(opcode, "BYTE")) {	// 1¹ÙÀÌÆ® È®º¸
+					else if (!strcmp(opcode, "BYTE")) {	// 1ë°”ì´íŠ¸ í™•ë³´
 						if (isFloatNum(operand)) {
-							// ºÎµ¿¼Ò¼öÁ¡Àº 6¹ÙÀÌÆ® »ç¿ëÇÏ¹Ç·Î
+							// ë¶€ë™ì†Œìˆ˜ì ì€ 6ë°”ì´íŠ¸ ì‚¬ìš©í•˜ë¯€ë¡œ
 							LOCCTR[LocctrCounter] = loc + 6;
 						}
 						else {
@@ -192,7 +192,7 @@ void pass_another(){
 					}
 										
 				
-						// °¢°¢ END ¾î¼Àºí·¯ Áö½ÃÀÚ Ãß°¡
+						// ê°ê° END ì–´ì…ˆë¸”ëŸ¬ ì§€ì‹œìž ì¶”ê°€
 						IMRArray[CSectCounter][ArrayIndex[CSectCounter]]->LabelField[0] = '\0';
 						IMRArray[CSectCounter][ArrayIndex[CSectCounter]]->Loc = LOCCTR[LocctrCounter - 1];
 						strcpy(IMRArray[CSectCounter][ArrayIndex[CSectCounter]]->OperatorField, "END");
@@ -200,61 +200,61 @@ void pass_another(){
 						program_length[CSectCounter] = LOCCTR[LocctrCounter - 1] - LOCCTR[0];
 						ArrayIndex[CSectCounter]++;
 
-						// »õ·Î¿î ÇÁ·Î±×·¥À» ÀÐ±â À§ÇÑ º¯¼ö ÃÊ±âÈ­
+						// ìƒˆë¡œìš´ í”„ë¡œê·¸ëž¨ì„ ì½ê¸° ìœ„í•œ ë³€ìˆ˜ ì´ˆê¸°í™”
 						CSectCounter++;
 						line = 1;
 						loc = 0;
 						LocctrCounter = 0;
 						LOCCTR[LocctrCounter] = 0;
-						FoundOnOptab_flag = 0;	// flag º¯¼ö ÃÊ±âÈ­
+						FoundOnOptab_flag = 0;	// flag ë³€ìˆ˜ ì´ˆê¸°í™”
 
-												// »õ·Î¿î Áß°£ÆÄÀÏ »ý¼º ¹× ÃÊ±âÈ­
+												// ìƒˆë¡œìš´ ì¤‘ê°„íŒŒì¼ ìƒì„± ë° ì´ˆê¸°í™”
 						IMRArray[CSectCounter][ArrayIndex[CSectCounter]] = (IntermediateRec *)malloc(sizeof(IntermediateRec));
 						strcpy(IMRArray[CSectCounter][ArrayIndex[CSectCounter]]->LabelField, label);
 						strcpy(IMRArray[CSectCounter][ArrayIndex[CSectCounter]]->OperandField, "");
 						strcpy(IMRArray[CSectCounter][ArrayIndex[CSectCounter]]->OperatorField, opcode);
 						IMRArray[CSectCounter][ArrayIndex[CSectCounter]]->LineIndex = 0;
 						IMRArray[CSectCounter][ArrayIndex[CSectCounter]]->Loc = 0;
-						RecordSymtab(label);	// °°ÀºÀÌ¸§ÀÌ ¾øÀ¸¹Ç·Î ½Éº¼Å×ÀÌºí¿¡ Ãß°¡
+						RecordSymtab(label);	// ê°™ì€ì´ë¦„ì´ ì—†ìœ¼ë¯€ë¡œ ì‹¬ë³¼í…Œì´ë¸”ì— ì¶”ê°€
 						start_address[CSectCounter] = LOCCTR[LocctrCounter];
 						LocctrCounter++;
 						ArrayIndex[CSectCounter]++;
 						continue;
 					}
-					else { // Á¤ÀÇµÇÁö ¾ÊÀº OP codeÀÌ¹Ç·Î °æ°íÈÄ ÇÁ·Î±×·¥ Á¾·á
+					else { // ì •ì˜ë˜ì§€ ì•Šì€ OP codeì´ë¯€ë¡œ ê²½ê³ í›„ í”„ë¡œê·¸ëž¨ ì¢…ë£Œ
 						fclose(fptr);
 						printf("ERROR: Invalid Operation Code[%s]\n", opcode);
 						exit(1);
 					}
 				}
 				else {
-					// END Assembler Directive¸¦ ¸¸³µÀ» °æ¿ì ÇÇ¿¬»êÀÚ ÀúÀå
+					// END Assembler Directiveë¥¼ ë§Œë‚¬ì„ ê²½ìš° í”¼ì—°ì‚°ìž ì €ìž¥
 					strcpy(End_operand, operand);
 				}
 			}
-			loc = LOCCTR[LocctrCounter];	// locÀ» ´Ù½Ã ¼³Á¤ÇÏ°í ´ÙÀ½ ·çÇÁ¸¦ ÁØºñ
-			IMRArray[CSectCounter][ArrayIndex[CSectCounter]]->Loc = LOCCTR[LocctrCounter - 1];	// Áß°£ÆÄÀÏ¿¡ ÇØ´ç ÄÚµåÀÇ ¸Þ¸ð¸® ¹øÁö ±â·Ï
-			LocctrCounter++;	// LOCCTR¸¦ Á¢±ÙÇÏ´Â ÀÎµ¦½º º¯¼ö °ª Áõ°¡
-			ArrayIndex[CSectCounter]++;	// ´ÙÀ½ ÄÚµå¸¦ ÀÐ±â À§ÇÑ Áß°£ÆÄÀÏÀÇ ÀÎµ¦½º º¯¼ö °ª Áõ°¡
+			loc = LOCCTR[LocctrCounter];	// locì„ ë‹¤ì‹œ ì„¤ì •í•˜ê³  ë‹¤ìŒ ë£¨í”„ë¥¼ ì¤€ë¹„
+			IMRArray[CSectCounter][ArrayIndex[CSectCounter]]->Loc = LOCCTR[LocctrCounter - 1];	// ì¤‘ê°„íŒŒì¼ì— í•´ë‹¹ ì½”ë“œì˜ ë©”ëª¨ë¦¬ ë²ˆì§€ ê¸°ë¡
+			LocctrCounter++;	// LOCCTRë¥¼ ì ‘ê·¼í•˜ëŠ” ì¸ë±ìŠ¤ ë³€ìˆ˜ ê°’ ì¦ê°€
+			ArrayIndex[CSectCounter]++;	// ë‹¤ìŒ ì½”ë“œë¥¼ ì½ê¸° ìœ„í•œ ì¤‘ê°„íŒŒì¼ì˜ ì¸ë±ìŠ¤ ë³€ìˆ˜ ê°’ ì¦ê°€
 		}
 
-		if (is_comment == 1) {	// Ã¹ ÁÙÀÌ ÁÖ¼®ÀÏ °æ¿ì ½ÃÀÛÀÌ µÇÁö ¾Ê´Â ¿À·ù ¼öÁ¤
+		if (is_comment == 1) {	// ì²« ì¤„ì´ ì£¼ì„ì¼ ê²½ìš° ì‹œìž‘ì´ ë˜ì§€ ì•ŠëŠ” ì˜¤ë¥˜ ìˆ˜ì •
 			start_line += 1;
 		}
 
-		FoundOnOptab_flag = 0;	// flag º¯¼ö ÃÊ±âÈ­
-		line += 1;	// ¼Ò½º Çà 1 Áõ°¡
+		FoundOnOptab_flag = 0;	// flag ë³€ìˆ˜ ì´ˆê¸°í™”
+		line += 1;	// ì†ŒìŠ¤ í–‰ 1 ì¦ê°€
 	}
 	program_length[CSectCounter] = LOCCTR[LocctrCounter - 2] - LOCCTR[0];
-	// END Áö½ÃÀÚ¸¦ ¸¸³µÀ» °æ¿ì END Áö½ÃÀÚ ¹Ù·Î ÀÌÀü ¼Ò½ºÄÚµåÀÇ ¸Þ¸ð¸® À§Ä¡¿Í ½ÃÀÛÁÖ¼Ò¸¦ »©¼­ ÃÑ ÇÁ·Î±×·¥ ±æÀÌ °è»ê
+	// END ì§€ì‹œìžë¥¼ ë§Œë‚¬ì„ ê²½ìš° END ì§€ì‹œìž ë°”ë¡œ ì´ì „ ì†ŒìŠ¤ì½”ë“œì˜ ë©”ëª¨ë¦¬ ìœ„ì¹˜ì™€ ì‹œìž‘ì£¼ì†Œë¥¼ ë¹¼ì„œ ì´ í”„ë¡œê·¸ëž¨ ê¸¸ì´ ê³„ì‚°
 
 	if (RecordEXTDEFLoc()) {
-		printf("ERROR: Isn't exist External Define Label\n");	// EXTDEF Áß¿¡ ½Éº¼Å×ÀÌºí¿¡¼­ Ã£À» ¼ö ¾ø´Â ·¹ÀÌºíÀÌ ÀÖÀ» °æ¿ì ¿¹¿ÜÃ³¸®
+		printf("ERROR: Isn't exist External Define Label\n");	// EXTDEF ì¤‘ì— ì‹¬ë³¼í…Œì´ë¸”ì—ì„œ ì°¾ì„ ìˆ˜ ì—†ëŠ” ë ˆì´ë¸”ì´ ìžˆì„ ê²½ìš° ì˜ˆì™¸ì²˜ë¦¬
 		fclose(fptr);
 		exit(1);
 	}
 
-	// Pass 1¿¡¼­ »ý¼ºµÈ ½Éº¼Å×ÀÌºí Ãâ·Â
+	// Pass 1ì—ì„œ ìƒì„±ëœ ì‹¬ë³¼í…Œì´ë¸” ì¶œë ¥
 	CreateSymbolTable();
 
 }
