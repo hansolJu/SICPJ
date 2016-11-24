@@ -1,7 +1,4 @@
 ﻿
-
-
-
 //최종 어셈블러
 
 //최종 어셈블리프로그램이 동작할려면
@@ -46,47 +43,6 @@
 
 */
 
-//패스 1
-/*
-*SIC 어셈블러 알고리즘(PASS1)
-1. Source file을 라인단위로 읽어들인다.
-2. Tokenizer 클래스를 사용하여 일정 스트링을 TOKEN으로 구별
---> LABLE, OPCODE, OPERAND
-3. 첫번째 LABLE체크
---> SYMTAB에 레이블을 탐색해서 같은 LABLE이 있으면 오류,
-없으면 LABLE이름과 LOC를 저장한다.
-4. 두번째 OPCODE체크
---> LOC를 증가시키는데 어셈블리어 지시어(Assembler directive)에 따라
-데이터영역의 길이결정과 주소배정에 대한 처리를 한다.
-5. 계속 라인단위로 읽어들여서 프로그램 내의 모든 문에 주소를 배정한다.
-
-*SIC 어셈블러 알고리즘(PASS1) 코드화!
-public void pass1(string 파일이름){
-// 위치카운터(LOCCTR)초기화
-try{
-//파일열기
-//첫번째 라인을 읽어들임
-//tokenizer 메소드 통과
-Tokenizer.parse(line);
-if(분리한 token에서 "START"지시어 찾음){
-1.시작주소를 읽어 저장
-loc를 셋팅
-.
-.
-}
-while(END문이 나올때까지 수행){
-if(주석이 아니면)
-//레이블 체크
-.
-.
-//opcode체크
-.
-.
-}
-//다음라인을 읽어들임
-//다시 tokenizer로 토큰으로 구분
-}
-*/
 
 //패스 2
 /*
