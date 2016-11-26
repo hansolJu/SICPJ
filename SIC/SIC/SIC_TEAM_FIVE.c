@@ -258,10 +258,6 @@ int xtoi(char *);
 int srchoperand(char *s);
 int path1();
 void path2();
-int main();
-
-
-
 /*****************main****************/
 
 int main() {
@@ -349,18 +345,7 @@ int sizeCheck(int i) {
     }
 }
 
-struct oneline readline(FILE *, int) {
-}
-
-int lookup(char *) {
-}
-
-void insert(char *, int) {
-}
-
 //OPCODE를 위해 OPTAB를 검색, 리턴값: 검색된 OP의 배열의 첨자 + 1, 실패시 0
-int srchop(char *) {
-}
 
 //hexadecimal string to decimal integer
 int xtoi(char *hex) {
@@ -378,8 +363,6 @@ int xtoi(char *hex) {
     return val;
 }
 
-int srchoperand(char *s) {
-}
 
 int path1() {
     FILE* fp;
@@ -417,10 +400,6 @@ int path1() {
 
     return lineCount;
 }
-<<<<<<< HEAD
-=======
 
 void path2() {
 }
-
->>>>>>> 171264e1d1a05d3ed1be3de363f8d4b0c0b96f0e
